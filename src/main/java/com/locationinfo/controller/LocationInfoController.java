@@ -35,9 +35,9 @@ public class LocationInfoController {
             if (null != requestBean.getLocation() && !requestBean.getLocation().isEmpty()) {
                 return locationInfoService.getLocation(requestBean);
             }else {
-                responseBean.setSuccess(false);
-                responseBean.setHttpStatus(HttpStatus.BAD_REQUEST);
-                responseBean.setMessage("Location name is missing in request.");
+                //responseBean.setSuccess(false);
+                //responseBean.setHttpStatus(HttpStatus.BAD_REQUEST);
+                //responseBean.setMessage("Location name is missing in request.");
                 //return new ResponseEntity<>(responseBeanDTO, HttpStatus.BAD_REQUEST);
                 return locationInfoService.getLocation(requestBean);
             }

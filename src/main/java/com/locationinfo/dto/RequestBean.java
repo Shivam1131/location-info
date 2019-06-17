@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class RequestBean {
     String location;
+    String categoryName;
 
 }

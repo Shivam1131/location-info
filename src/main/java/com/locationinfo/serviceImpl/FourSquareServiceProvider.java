@@ -82,7 +82,6 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
 
                 locationDTO.setLatitude(location.get("lat").toString());
                 locationDTO.setLongitude(location.get("lng").toString());
-                locationDTO.setCountryCode(location.get("cce").toString());
                 locationDTO.setCountry(location.get("country").toString());
                 locationDTO.setPostalCode(null != location.get("postalCode") ? location.get("postalCode").toString() : "NA");
                 locationDTO.setPostalCode(null != location.get("city") ? location.get("city").toString() : "NA");

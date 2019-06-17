@@ -1,6 +1,7 @@
 package com.locationinfo.serviceImpl;
 
 
+import com.locationinfo.constants.AppConstants;
 import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
 import com.locationinfo.dto.ResponseBean;
@@ -10,10 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationInfoServiceImpl implements LocationInfoService {
@@ -40,25 +44,33 @@ public class LocationInfoServiceImpl implements LocationInfoService {
             Set<LocationDTO> locationSet;
             Map<String, Object> data = new HashMap<>();
 
+            //locationSet=fourSquareServiceProvider.getLocationInfo(requestBean);
+            //locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));
+            locationSet = googleServiceProvider.getLocationInfo(requestBean);
 
-            locationSet=fourSquareServiceProvider.getLocationInfo(requestBean);
-            locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));
-            //locationSet = googleServiceProvider.getLocationInfo(requestBean);
+            if (locationSet.isEmpty())
+                responseBean.setMessage(AppConstants.NO_DATA_FOUND);
+            else
+                responseBean.setMessage(AppConstants.DATA_RETRIEVED_SUCCESS);
 
+
+            if(requestBean.getCategoryName()!=null && !requestBean.getCategoryName().isEmpty() && !CollectionUtils.isEmpty(locationSet)){
+                locationSet.retainAll(
+                        locationSet.stream().
+                                filter(location -> (location.getCategory()!=null ? location.getCategory():"").toLowerCase().
+                                        contains(requestBean.getCategoryName().toLowerCase())
+                        ).collect(Collectors.toList())
+                );
+                if(CollectionUtils.isEmpty(locationSet)){
+                    responseBean.setMessage(AppConstants.NO_DATA_FOUND_FOR_CATEGORY);
+                }
+            }
             data.put("result",locationSet);
-
-           // locationSet = googleServiceProvider.getLocationInfo(requestBean);
-
-            System.out.println("locationSet  : "+locationSet);
-
-          //  locationSet.addAll(fourSquareServiceProvider.getLocationInfo(requestBean));
-
-
-            log.info("getLocationInfo() from LocationInfoServiceImpl : "+requestBean);
+            //System.out.println("locationSet  : "+locationSet);
 
             responseBean.setHttpStatus(HttpStatus.OK);
             responseBean.setData(data);
-            responseBean.setMessage("Location data retrieved successfully.");
+            responseBean.setStatus(AppConstants.SUCCESS);
 
         }catch (Exception e){
             e.printStackTrace();

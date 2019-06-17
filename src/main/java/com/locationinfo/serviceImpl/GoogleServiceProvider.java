@@ -9,6 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,9 @@ public class GoogleServiceProvider implements LocationServiceProvider {
         CloseableHttpResponse responseData =httpClient.execute(httpGet);
 
         map = mapper.readValue(responseData.getEntity().getContent(), Map.class);
+
+        log.info("google result info : "+new JSONObject(map));
+
         List<Map<String, Object>> places = (List<Map<String, Object>>)map.get("results");
 
         for (Map<String, Object> place: places) {
@@ -76,6 +80,7 @@ public class GoogleServiceProvider implements LocationServiceProvider {
             parsedObject = (HashMap<String, Object>)place.get("geometry");
             parsedObject = (HashMap<String, Object>)parsedObject.get("location");
 
+            //get lat and lng from location component
             locationDTO.setLatitude(parsedObject.get("lat").toString());
             locationDTO.setLongitude(parsedObject.get("lng").toString());
 
@@ -96,7 +101,6 @@ public class GoogleServiceProvider implements LocationServiceProvider {
 
             locationSet.add(locationDTO);
         }
-
 
     return locationSet;
     }

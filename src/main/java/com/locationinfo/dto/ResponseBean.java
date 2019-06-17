@@ -8,9 +8,10 @@ import java.util.Map;
 @Data
 public class ResponseBean {
 
-    private Boolean success = true;
+    private String status;
     private String message;
-    private Map<String, Object> data;
     private HttpStatus httpStatus;
+    private Map<String, Object> data;
+
 
 }
