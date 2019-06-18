@@ -17,21 +17,23 @@ import org.springframework.web.client.RestTemplate;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.locationinfo.constants.AppConstants.*;
+
 @Service
 public class FourSquareServiceProvider implements LocationServiceProvider {
     private CloseableHttpClient httpClient;
 
-    @Autowired
-    private RestTemplate restTemplate;
+/*    @Autowired
+    private RestTemplate restTemplate;*/
 
-    @Value("${foursquare-client_id}")
-    private String clientId;
+   /* @Value("${foursquare-client_id}")
+    private String clientId;*/
 
-    @Value("${foursquare-client_secret}")
-    private String clientSecret ;
+    /*@Value("${foursquare-client_secret}")
+    private String clientSecret ;*/
 
-    @Value("${fourSquare-baseUrl}")
-    private String fourSquareBaseUrl;
+    /*@Value("${fourSquare-baseUrl}")
+    private String fourSquareBaseUrl;*/
 
     public FourSquareServiceProvider(){httpClient = HttpClients.createDefault();}
 

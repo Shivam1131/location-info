@@ -8,6 +8,6 @@ import java.util.Set;
 
 public interface LocationServiceProvider {
 
-    Set<LocationDTO> getLocationInfo(RequestBean requestBean) throws Exception;
+    Set<LocationDTO> getLocationInfo(RequestBean requestBean) ;
 
 }

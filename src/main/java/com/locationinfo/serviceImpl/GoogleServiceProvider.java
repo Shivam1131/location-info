@@ -25,6 +25,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
+import static com.locationinfo.constants.AppConstants.GOOGLE_API_KEY;
+import static com.locationinfo.constants.AppConstants.GOOGLE_BASE_URL;
+
 @Service
 @PropertySource("classpath:application.properties")
 public class GoogleServiceProvider implements LocationServiceProvider {
@@ -34,19 +37,19 @@ public class GoogleServiceProvider implements LocationServiceProvider {
 
     private enum StatusCode {OK, ZERO_RESULTS, OVER_DAILY_LIMIT, INVALID_REQUEST, UNKNOWN_ERROR}
 
-    @Autowired
-    private RestTemplate restTemplate;
+  /*  @Autowired
+    private RestTemplate restTemplate;*/
 
-    @Value("${geocode-apikey}")
-    private String googleApiKey;
+  /*  @Value("${geocode-apikey}")
+    private String googleApiKey;*/
 
-    @Value("${geocode-baseUrl}")
-    private String geocodeBaseUrl ;
+    /*@Value("${geocode-baseUrl}")
+    private String geocodeBaseUrl ;*/
 
 
 
     @Override
-    public Set<LocationDTO> getLocationInfo(RequestBean requestBean) throws Exception{
+    public Set<LocationDTO> getLocationInfo(RequestBean requestBean){
 
         ObjectMapper mapper = new ObjectMapper();
         Set<LocationDTO> locationSet = new HashSet<>() ;
@@ -54,52 +57,57 @@ public class GoogleServiceProvider implements LocationServiceProvider {
         HashMap<String, Object> parsedObject;
         Map map;
 
-        httpClient = HttpClients.createDefault();
-        String baseUrl = geocodeBaseUrl + "?key=" + googleApiKey + "&address=" +requestBean.getLocation()/*+ URLEncoder.encode(query, "UTF-8")*/;
-        HttpGet httpGet = new HttpGet(baseUrl);
-        httpGet.setHeader("Accept", "application/json");
-        httpGet.setHeader("Content-type", "application/json");
+        try {
+            httpClient = HttpClients.createDefault();
+            String baseUrl = GOOGLE_BASE_URL + "?key=" + GOOGLE_API_KEY + "&address=" +requestBean.getLocation()/*+ URLEncoder.encode(query, "UTF-8")*/;
+            HttpGet httpGet = new HttpGet(baseUrl);
+            httpGet.setHeader("Accept", "application/json");
+            httpGet.setHeader("Content-type", "application/json");
 
-        CloseableHttpResponse responseData =httpClient.execute(httpGet);
+            CloseableHttpResponse responseData =httpClient.execute(httpGet);
 
-        map = mapper.readValue(responseData.getEntity().getContent(), Map.class);
+            map = mapper.readValue(responseData.getEntity().getContent(), Map.class);
 
-        log.info("google result info : "+new JSONObject(map));
+            log.info("google result info : "+new JSONObject(map));
 
-        List<Map<String, Object>> places = (List<Map<String, Object>>)map.get("results");
+            List<Map<String, Object>> places = (List<Map<String, Object>>)map.get("results");
 
-        for (Map<String, Object> place: places) {
-            locationDTO = new LocationDTO();
+            for (Map<String, Object> place: places) {
+                locationDTO = new LocationDTO();
 
-            if(StringUtils.isEmpty(place.get("formatted_address"))) {
-                locationDTO.setAddress(place.get("formatted_address").toString());
-            }
-            if(null != place.get("place_id")) {
-                locationDTO.setGooglePlaceId(place.get("place_id").toString());
-            }
-            parsedObject = (HashMap<String, Object>)place.get("geometry");
-            parsedObject = (HashMap<String, Object>)parsedObject.get("location");
+                if(StringUtils.isEmpty(place.get("formatted_address"))) {
+                    locationDTO.setAddress(place.get("formatted_address").toString());
+                }
+                if(null != place.get("place_id")) {
+                    locationDTO.setGooglePlaceId(place.get("place_id").toString());
+                }
+                parsedObject = (HashMap<String, Object>)place.get("geometry");
+                parsedObject = (HashMap<String, Object>)parsedObject.get("location");
 
-            //get lat and lng from location component
-            locationDTO.setLatitude(parsedObject.get("lat").toString());
-            locationDTO.setLongitude(parsedObject.get("lng").toString());
+                //get lat and lng from location component
+                locationDTO.setLatitude(parsedObject.get("lat").toString());
+                locationDTO.setLongitude(parsedObject.get("lng").toString());
 
-            List<Map<String, Object>> localityData = (List<Map<String, Object>>)place.get("address_components");
+                List<Map<String, Object>> localityData = (List<Map<String, Object>>)place.get("address_components");
 
-            // Get City from the address component
-            Map<String, Object> data = localityData.stream().filter(locality -> locality.get("types").toString().contains("locality")).findAny().orElse(null);
-            locationDTO.setCity(null != data ? data.get("long_name").toString() : "NA");
+                // Get City from the address component
+                Map<String, Object> data = localityData.stream().filter(locality -> locality.get("types").toString().contains("locality")).findAny().orElse(null);
+                locationDTO.setCity(null != data ? data.get("long_name").toString() : "NA");
 
-            // Get Postal code from the address component
-            data = localityData.stream().filter(locality -> locality.get("types").toString().contains("postal_code")).findAny().orElse(null);
-            locationDTO.setPostalCode(null != data ? data.get("long_name").toString() : "NA");
+                // Get Postal code from the address component
+                data = localityData.stream().filter(locality -> locality.get("types").toString().contains("postal_code")).findAny().orElse(null);
+                locationDTO.setPostalCode(null != data ? data.get("long_name").toString() : "NA");
 
-            // Get Country from the address component
-            data = localityData.stream().filter(locality -> locality.get("types").toString().contains("country")).findAny().orElse(null);
-            locationDTO.setCountry(null != data ? data.get("long_name").toString() : "NA");
-            locationDTO.setCountryCode(null != data ? data.get("short_name").toString() : "NA");
+                // Get Country from the address component
+                data = localityData.stream().filter(locality -> locality.get("types").toString().contains("country")).findAny().orElse(null);
+                locationDTO.setCountry(null != data ? data.get("long_name").toString() : "NA");
+                locationDTO.setCountryCode(null != data ? data.get("short_name").toString() : "NA");
 
-            locationSet.add(locationDTO);
+                locationSet.add(locationDTO);
+        }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     return locationSet;

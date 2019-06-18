@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -33,7 +34,7 @@ public class LocationInfoServiceImpl implements LocationInfoService {
 
 
     @Override
-    public ResponseBean getLocation(RequestBean requestBean) {
+    public ResponseEntity<ResponseBean> getLocation(RequestBean requestBean) {
 
         //Generate parsed response and add it to map in response bean
 
@@ -44,16 +45,16 @@ public class LocationInfoServiceImpl implements LocationInfoService {
             Set<LocationDTO> locationSet;
             Map<String, Object> data = new HashMap<>();
 
-            //locationSet=fourSquareServiceProvider.getLocationInfo(requestBean);
-            //locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));
-            locationSet = googleServiceProvider.getLocationInfo(requestBean);
+            locationSet=fourSquareServiceProvider.getLocationInfo(requestBean);
+            locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));
+            //locationSet = googleServiceProvider.getLocationInfo(requestBean);
 
             if (locationSet.isEmpty())
                 responseBean.setMessage(AppConstants.NO_DATA_FOUND);
             else
                 responseBean.setMessage(AppConstants.DATA_RETRIEVED_SUCCESS);
 
-
+            //Filter data based on categoryName
             if(requestBean.getCategoryName()!=null && !requestBean.getCategoryName().isEmpty() && !CollectionUtils.isEmpty(locationSet)){
                 locationSet.retainAll(
                         locationSet.stream().
@@ -66,8 +67,6 @@ public class LocationInfoServiceImpl implements LocationInfoService {
                 }
             }
             data.put("result",locationSet);
-            //System.out.println("locationSet  : "+locationSet);
-
             responseBean.setHttpStatus(HttpStatus.OK);
             responseBean.setData(data);
             responseBean.setStatus(AppConstants.SUCCESS);
@@ -76,7 +75,7 @@ public class LocationInfoServiceImpl implements LocationInfoService {
             e.printStackTrace();
         }
 
-        return responseBean;
+        return new  ResponseEntity<>(responseBean,responseBean.getHttpStatus()) ;
 
     }
 
