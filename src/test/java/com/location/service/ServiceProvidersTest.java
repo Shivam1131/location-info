@@ -47,9 +47,6 @@ public class ServiceProvidersTest {
     private String city = "chicago";
     private String type = "Travel";
 
-    /*@Mock
-    ApplicationProperties applicationProperties;*/
-
     @Mock
     RestTemplate restTemplate;
 

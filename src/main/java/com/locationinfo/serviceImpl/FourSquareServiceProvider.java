@@ -46,7 +46,7 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
 
 
         try {
-            String baseUrl = fourSquareBaseUrl + "?client_id=" + clientId + "&client_secret=" + clientSecret + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date())+"&near=" + requestBean.getLocation();
+            String baseUrl = FOUR_SQUARE_BASE_URL + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date())+"&near=" + requestBean.getLocation();
 
             HttpGet httpGet = new HttpGet(baseUrl);
             httpGet.setHeader("Content-type", "application/json");
