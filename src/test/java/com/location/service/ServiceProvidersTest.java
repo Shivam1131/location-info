@@ -1,11 +1,9 @@
 package com.location.service;
 
-import com.locationinfo.constants.AppConstants;
 import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
-import com.locationinfo.dto.ResponseBean;
-import com.locationinfo.serviceImpl.FourSquareServiceProvider;
-import com.locationinfo.serviceImpl.GoogleServiceProvider;
+import com.locationinfo.serviceimpl.FourSquareServiceProvider;
+import com.locationinfo.serviceimpl.GoogleServiceProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,14 +21,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
 import java.util.Set;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 /**

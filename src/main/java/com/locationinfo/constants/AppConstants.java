@@ -4,6 +4,12 @@ package com.locationinfo.constants;
  * @author Sadashiv Kadam
  */
 public class AppConstants {
+
+    private AppConstants() {
+        super();
+    }
+    public static final String TYPES = "types";
+    public static final String LONG_NAME = "long_name";
     public static final String SUCCESS = "Success";
     public static final String FAILURE = "Failure";
     public static final String NO_DATA_FOUND = "No data found for the location.";

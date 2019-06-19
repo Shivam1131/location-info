@@ -4,6 +4,7 @@ package com.locationinfo.controller;
 import com.locationinfo.constants.AppConstants;
 import com.locationinfo.dto.RequestBean;
 import com.locationinfo.dto.ResponseBean;
+import com.locationinfo.exception.LocationDetailsException;
 import com.locationinfo.service.LocationInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,21 +38,23 @@ public class LocationInfoController {
     @PostMapping("/getLocationInfo")
     public ResponseEntity<ResponseBean> getLocationInfo(@RequestBody RequestBean requestBean) {
 
-            logger.info("getLocationInfo() called with param : "+requestBean.getLocation());
+            logger.info("getLocationInfo() called with param :{} ", requestBean.getLocation());
 
-            ResponseBean responseBean = new ResponseBean();
+            try {
+                ResponseBean responseBean = new ResponseBean();
 
-            if (null != requestBean.getLocation() && !requestBean.getLocation().isEmpty()) {
-                return locationInfoService.getLocation(requestBean);
-            }else {
-                responseBean.setStatus(AppConstants.FAILURE);
-                responseBean.setHttpStatus(HttpStatus.BAD_REQUEST);
-                responseBean.setMessage(AppConstants.LOCATION_NAME_MISSING);
-                //return new ResponseEntity<>(responseBeanDTO, HttpStatus.BAD_REQUEST);
-                return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
-                //return locationInfoService.getLocation(requestBean);
+                if (null != requestBean.getLocation() && !requestBean.getLocation().isEmpty()) {
+                    return locationInfoService.getLocation(requestBean);
+                }else {
+
+                    responseBean.setStatus(AppConstants.FAILURE);
+                    responseBean.setHttpStatus(HttpStatus.BAD_REQUEST);
+                    responseBean.setMessage(AppConstants.LOCATION_NAME_MISSING);
+                    return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
+                }
+            }catch (Exception e){
+                throw new LocationDetailsException(e.getMessage());
             }
-
     }
 }
 

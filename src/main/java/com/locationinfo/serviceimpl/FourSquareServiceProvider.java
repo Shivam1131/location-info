@@ -1,23 +1,21 @@
-package com.locationinfo.serviceImpl;
+package com.locationinfo.serviceimpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
+import com.locationinfo.exception.LocationDetailsException;
 import com.locationinfo.service.LocationServiceProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.locationinfo.constants.AppConstants.*;
+
 /**
  * @author Sadashiv Kadam
  */
@@ -25,26 +23,15 @@ import static com.locationinfo.constants.AppConstants.*;
 public class FourSquareServiceProvider implements LocationServiceProvider {
     private CloseableHttpClient httpClient;
 
-/*    @Autowired
-    private RestTemplate restTemplate;*/
-
-   /* @Value("${foursquare-client_id}")
-    private String clientId;*/
-
-    /*@Value("${foursquare-client_secret}")
-    private String clientSecret ;*/
-
-    /*@Value("${fourSquare-baseUrl}")
-    private String fourSquareBaseUrl;*/
-
-    public FourSquareServiceProvider(){httpClient = HttpClients.createDefault();}
+    public FourSquareServiceProvider() {
+        httpClient = HttpClients.createDefault();
+    }
 
 
     /**
-     * @implNote get set of LocationDTO from fourSquare api
-     *
      * @param requestBean contains location and optional categoryType
      * @return set of location details
+     * @implNote get set of LocationDTO from fourSquare api
      */
     @Override
     public Set<LocationDTO> getLocationInfo(RequestBean requestBean) {
@@ -55,41 +42,44 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
 
 
         try {
-            String baseUrl = FOUR_SQUARE_BASE_URL + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date())+"&near=" + requestBean.getLocation();
+            String baseUrl = FOUR_SQUARE_BASE_URL + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "&near=" + requestBean.getLocation();
 
             HttpGet httpGet = new HttpGet(baseUrl);
             httpGet.setHeader("Content-type", "application/json");
-            CloseableHttpResponse responseData =httpClient.execute(httpGet);
-            if (responseData.getStatusLine().getStatusCode()==200){
-                getFourSquareResponse(responseData,locationSet,mapper);
-
-
-
+            CloseableHttpResponse responseData = httpClient.execute(httpGet);
+            if (responseData.getStatusLine().getStatusCode() == 200) {
+                getFourSquareResponse(responseData, locationSet, mapper);
             }
-
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new LocationDetailsException(e.getMessage(),"401");
         }
-    return locationSet;
+        return locationSet;
     }
 
-    public void getFourSquareResponse(CloseableHttpResponse response, Set<LocationDTO> locationDTOSet, ObjectMapper mapper){
-    try{
-        Map<String, Object> map;
-        LinkedHashMap<String, Object> places;
-            map = mapper.readValue(response.getEntity().getContent(), Map.class);
-            places = (LinkedHashMap<String, Object>)map.get("response");
+    /**
+     * @param response return from the rest service of foursquare & mapper
+     * @return Set<LocationDTO> of locations from google geocode and foursquare
+     * @implNote data parsing of response object return from foursquare rest service
+     */
+    public void getFourSquareResponse(CloseableHttpResponse response, Set<LocationDTO> locationDTOSet, ObjectMapper mapper) {
 
-            ArrayList<LinkedHashMap<String, Object>> venues = (ArrayList<LinkedHashMap<String, Object>>)places.get("venues");
+            Map<String, Object> map;
+            LinkedHashMap<String, Object> places;
+
+        try {
+            map = mapper.readValue(response.getEntity().getContent(), Map.class);
+            places = (LinkedHashMap<String, Object>) map.get("response");
+
+            ArrayList<LinkedHashMap<String, Object>> venues = (ArrayList<LinkedHashMap<String, Object>>) places.get("venues");
 
             LocationDTO locationDTO;
             LinkedHashMap<String, Object> location;
             ArrayList<Object> categoriess;
-            for (LinkedHashMap<String, Object> venue: venues) {
+            for (LinkedHashMap<String, Object> venue : venues) {
                 locationDTO = new LocationDTO();
                 locationDTO.setName(String.valueOf(venue.get("name")));
 
-                location = (LinkedHashMap<String, Object>)venue.get("location");
+                location = (LinkedHashMap<String, Object>) venue.get("location");
 
                 locationDTO.setLatitude(location.get("lat").toString());
                 locationDTO.setLongitude(location.get("lng").toString());
@@ -100,16 +90,15 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
                 locationDTO.setPostalCode(null != location.get("formattedAddress") ? location.get("formattedAddress").toString() : "NA");
                 categoriess = (ArrayList<Object>) venue.get("categories");
 
-                for (Object category: categoriess) {
-                    //Reusing same object
+                for (Object category : categoriess) {
                     location = (LinkedHashMap<String, Object>) category;
                     locationDTO.setCategory(location.get("name").toString());
                 }
                 locationDTOSet.add(locationDTO);
             }
 
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new LocationDetailsException(e.getMessage(),"401");
         }
     }
 }
