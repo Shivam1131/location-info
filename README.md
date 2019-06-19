@@ -13,8 +13,8 @@
  Git ropository need to be cloned on local machine and run following command to start an application
 
 ## Access Credentials Creation:
-	Geocode api keys generation
-	FourSquare client secret and client ID generation.
+	Generate Geocode api keys.
+	Generate FourSquare client secret and client ID.
 
  Replace google Geocode api keys in AppConstants.java file with `GOOGLE_API_KEY` key.
  Replace Foursquare client_id and client_secret in AppConstants.java file with `CLIENT_SECRET` and `CLIENT_ID`.
@@ -35,6 +35,12 @@ Returns a list of places for a given location with attribute like category(e.g.B
 **Parameters:**
 - location: (Required) name of location
 - categoryName: (Optional) Search for place by category name.
+
+Sample Request : 
+{
+	"location":"Pune",
+	"categoryName":"Shop"
+}
 
  Sample Response:
 
