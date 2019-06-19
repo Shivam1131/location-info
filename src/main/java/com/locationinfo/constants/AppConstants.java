@@ -1,5 +1,8 @@
 package com.locationinfo.constants;
 
+/**
+ * @author Sadashiv Kadam
+ */
 public class AppConstants {
     public static final String SUCCESS = "Success";
     public static final String FAILURE = "Failure";
@@ -13,7 +16,5 @@ public class AppConstants {
     public static final String CLIENT_ID="4HVVPGZAR11ONVIJ1O02OAO0FCPOXDSI33FZWKZLW1GT0CR3";
     public static final String GOOGLE_API_KEY = "AIzaSyBAlxn0f9S4ndp-NoTkDYtF7viJlGE2Ujg";
     public static final String GOOGLE_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
-
-
 
 }

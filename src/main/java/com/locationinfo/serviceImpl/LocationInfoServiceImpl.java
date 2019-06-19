@@ -20,6 +20,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author Sadashiv Kadam
+ */
 @Service
 public class LocationInfoServiceImpl implements LocationInfoService {
 
@@ -31,12 +34,15 @@ public class LocationInfoServiceImpl implements LocationInfoService {
     @Autowired
     private FourSquareServiceProvider fourSquareServiceProvider;
 
-
+    /**
+     * Method to get geocode details combine from google geocode and foursquare API
+     *
+     * @param requestBean contains location and optional categoryType
+     * @return ResponseBean  along with place details
+     */
 
     @Override
     public ResponseEntity<ResponseBean> getLocation(RequestBean requestBean) {
-
-        //Generate parsed response and add it to map in response bean
 
         ResponseBean responseBean = new ResponseBean();
 

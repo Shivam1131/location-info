@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ * @author Sadashiv Kadam
+ */
 @RestController
 @RequestMapping("/api")
 public class LocationInfoController {
@@ -25,6 +27,13 @@ public class LocationInfoController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
+    /**
+     * @apiNote API to get list of location details from fourSquare and google Geocode
+     * & combines the result
+     *
+     * @param requestBean contains location and optional categoryType
+     * @return ResponseBean along with location details
+     */
     @PostMapping("/getLocationInfo")
     public ResponseEntity<ResponseBean> getLocationInfo(@RequestBody RequestBean requestBean) {
 

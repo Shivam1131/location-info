@@ -27,7 +27,9 @@ import java.util.*;
 
 import static com.locationinfo.constants.AppConstants.GOOGLE_API_KEY;
 import static com.locationinfo.constants.AppConstants.GOOGLE_BASE_URL;
-
+/**
+ * @author Sadashiv Kadam
+ */
 @Service
 @PropertySource("classpath:application.properties")
 public class GoogleServiceProvider implements LocationServiceProvider {
@@ -47,6 +49,12 @@ public class GoogleServiceProvider implements LocationServiceProvider {
     private String geocodeBaseUrl ;*/
 
 
+    /**
+     * @implNote get set of LocationDTO from geocode api
+     *
+     * @param requestBean contains location and optional categoryType
+     * @return set of location details
+     */
 
     @Override
     public Set<LocationDTO> getLocationInfo(RequestBean requestBean){

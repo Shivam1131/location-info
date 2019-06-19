@@ -4,7 +4,9 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.util.Map;
-
+/**
+ * @author Sadashiv Kadam
+ */
 @Data
 public class ResponseBean {
 

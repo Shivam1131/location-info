@@ -18,7 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.locationinfo.constants.AppConstants.*;
-
+/**
+ * @author Sadashiv Kadam
+ */
 @Service
 public class FourSquareServiceProvider implements LocationServiceProvider {
     private CloseableHttpClient httpClient;
@@ -37,6 +39,13 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
 
     public FourSquareServiceProvider(){httpClient = HttpClients.createDefault();}
 
+
+    /**
+     * @implNote get set of LocationDTO from fourSquare api
+     *
+     * @param requestBean contains location and optional categoryType
+     * @return set of location details
+     */
     @Override
     public Set<LocationDTO> getLocationInfo(RequestBean requestBean) {
 
