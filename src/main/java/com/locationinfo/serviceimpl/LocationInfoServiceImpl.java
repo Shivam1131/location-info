@@ -1,6 +1,5 @@
 package com.locationinfo.serviceimpl;
 
-
 import com.locationinfo.constants.AppConstants;
 import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
@@ -49,7 +48,6 @@ public class LocationInfoServiceImpl implements LocationInfoService {
 
             locationSet=fourSquareServiceProvider.getLocationInfo(requestBean);
             locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));
-
             if (locationSet.isEmpty())
                 responseBean.setMessage(AppConstants.NO_DATA_FOUND);
             else

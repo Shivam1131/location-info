@@ -4,6 +4,7 @@ import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
 import com.locationinfo.serviceimpl.FourSquareServiceProvider;
 import com.locationinfo.serviceimpl.GoogleServiceProvider;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -95,4 +96,44 @@ public class ServiceProvidersTest {
         assertTrue("Returning List of places", !CollectionUtils.isEmpty(locationDTOSet));
 
     }
+
+    @Test
+    @DisplayName("Geocode Test: Get details for given location")
+    public void testGoogleProviderServiceRestSuccess() throws Exception {
+
+        final Set<LocationDTO> resultDTOSet = googleProviderService.getLocationInfo(new RequestBean("pune","shop"));
+        //Verify test cases
+        System.out.print("resultDTOSet=================>"+resultDTOSet);
+        Assert.assertTrue(!CollectionUtils.isEmpty(resultDTOSet));
+    }
+
+    @Test
+    @DisplayName("Geocode Test: No results for empty request params")
+    public void testGoogleProviderServiceRestFailure() throws Exception {
+
+        final Set<LocationDTO> resultDTOSet = googleProviderService.getLocationInfo(new RequestBean("",""));
+        //Verify test cases
+        Assert.assertTrue(CollectionUtils.isEmpty(resultDTOSet));
+
+    }
+
+    @Test
+    @DisplayName("FourSquare Test: Get details for given location")
+    public void testFourSquareProviderServiceRestSuccess() throws Exception {
+
+        final Set<LocationDTO> resultDTOSet = fourSquareProviderService.getLocationInfo(new RequestBean("pune","shop"));
+        //Verify test cases
+        Assert.assertTrue(!CollectionUtils.isEmpty(resultDTOSet));
+    }
+
+    @Test
+    @DisplayName("FourSquare Test: No results for empty request params")
+    public void testFourSquareServiceRestFailure() throws Exception {
+
+        final Set<LocationDTO> resultDTOSet = fourSquareProviderService.getLocationInfo(new RequestBean("",""));
+        //Verify test cases
+        Assert.assertTrue(CollectionUtils.isEmpty(resultDTOSet));
+
+    }
+
 }

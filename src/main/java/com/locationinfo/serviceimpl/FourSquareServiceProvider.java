@@ -40,7 +40,6 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
 
         ObjectMapper mapper = new ObjectMapper();
 
-
         try {
             String baseUrl = FOUR_SQUARE_BASE_URL + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "&near=" + requestBean.getLocation();
 
