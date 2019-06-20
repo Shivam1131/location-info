@@ -6,14 +6,14 @@ import lombok.Data;
  * @author Sadashiv Kadam
  */
 @Data
-public class LocationDetailsException extends RuntimeException{
+public class LocationDetailsException extends RuntimeException {
     private String errorCode;
 
     public LocationDetailsException() {
         super();
     }
 
-    public LocationDetailsException(String message){
+    public LocationDetailsException(String message) {
         super(message);
     }
 

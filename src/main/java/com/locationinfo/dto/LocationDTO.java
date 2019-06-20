@@ -1,6 +1,7 @@
 package com.locationinfo.dto;
 
 import lombok.Data;
+
 /**
  * @author Sadashiv Kadam
  */

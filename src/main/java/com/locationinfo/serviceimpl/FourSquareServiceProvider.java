@@ -35,20 +35,16 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
     public Set<LocationDTO> getLocationInfo(RequestBean requestBean) {
 
         Set<LocationDTO> locationSet = new HashSet<>();
-
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-
             String baseUrl = FOUR_SQUARE_BASE_URL + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "&near=" + requestBean.getLocation();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> entity = new HttpEntity<>(headers);
-            String result = restTemplate.postForObject(baseUrl, entity, String.class);
+            String result = restTemplate.postForObject(baseUrl, new HttpEntity<>(headers), String.class);
             getFourSquareResponse(result, locationSet, mapper);
-
         } catch (Exception e) {
-            throw new LocationDetailsException(e.getMessage(),"401");
+            throw new LocationDetailsException(e.toString(), "401");
         }
         return locationSet;
     }
@@ -60,24 +56,21 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
      */
     public void getFourSquareResponse(String response, Set<LocationDTO> locationDTOSet, ObjectMapper mapper) {
 
-            Map<String, Object> map;
-            LinkedHashMap<String, Object> places;
+        Map<String, Object> map;
+        LinkedHashMap<String, Object> places;
 
         try {
             map = mapper.readValue(response, Map.class);
             places = (LinkedHashMap<String, Object>) map.get("response");
-
             ArrayList<LinkedHashMap<String, Object>> venues = (ArrayList<LinkedHashMap<String, Object>>) places.get("venues");
-
             LocationDTO locationDTO;
             LinkedHashMap<String, Object> location;
             ArrayList<Object> categoriess;
+
             for (LinkedHashMap<String, Object> venue : venues) {
                 locationDTO = new LocationDTO();
                 locationDTO.setName(String.valueOf(venue.get("name")));
-
                 location = (LinkedHashMap<String, Object>) venue.get("location");
-
                 locationDTO.setLatitude(location.get("lat").toString());
                 locationDTO.setLongitude(location.get("lng").toString());
                 locationDTO.setCountry(location.get("country").toString());
@@ -95,7 +88,7 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
             }
 
         } catch (Exception e) {
-            throw new LocationDetailsException(e.getMessage(),"401");
+            throw new LocationDetailsException(e.toString(), "401");
         }
     }
 

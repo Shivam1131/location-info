@@ -1,23 +1,22 @@
 # location-info
 
 ## Overview:
-	This application is an API that will result in details about the given location.
-	We can also get filtered result based on categoryName provided with the request.
+	This application is a web service that will result in details about the given location.
+	We can also get filtered results based on categoryName provided with the request.
 
 ## Software Installation:
 	java 1.8
 	git
 	maven
 
-
- Git ropository need to be cloned on local machine and run following command to start an application
+ Git repository needs to be cloned on the local machine and run following command to start an application
 
 ## Access Credentials Creation:
 	Generate Geocode api keys.
 	Generate FourSquare client secret and client ID.
 
- Replace google Geocode api keys in AppConstants.java file with `GOOGLE_API_KEY` key.
- Replace Foursquare client_id and client_secret in AppConstants.java file with `CLIENT_SECRET` and `CLIENT_ID`.
+Replace Google Geocode API keys in AppConstants.java file with `GOOGLE_API_KEY` key.  
+Replace Foursquare client_id and client_secret in AppConstants.java file with `CLIENT_SECRET` and `CLIENT_ID`.  
 
 ##### Build the application without test-cases
 ``` mvn clean install -DskipTests```
@@ -29,7 +28,7 @@
 ## API endpoints
 
 #### Get location details
-Returns a list of places for a given location with attribute like category(e.g.Building,Aquarium,Art Gallery etc).
+Returns a list of places for a given location with an attribute like category(e.g.Building, Aquarium, Art Gallery, etc).
 > POST: http://localhost:8180/api/getLocationInfo
 
 **Parameters:**

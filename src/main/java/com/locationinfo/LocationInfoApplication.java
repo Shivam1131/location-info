@@ -13,17 +13,17 @@ import org.springframework.web.client.RestTemplate;
 @EnableAutoConfiguration
 public class LocationInfoApplication {
 
-	/**
-	 * Main method
-	 */
-	public static void main(String[] args) {
+    /**
+     * Main method
+     */
+    public static void main(String[] args) {
 
-		SpringApplication.run(LocationInfoApplication.class, args);
-	}
+        SpringApplication.run(LocationInfoApplication.class, args);
+    }
 
-	@Bean
-	public RestTemplate restTemplate(){
-		return new RestTemplate();
-	}
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
 }
