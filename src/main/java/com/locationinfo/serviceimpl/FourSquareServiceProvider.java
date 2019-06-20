@@ -5,11 +5,12 @@ import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
 import com.locationinfo.exception.LocationDetailsException;
 import com.locationinfo.service.LocationServiceProvider;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -21,12 +22,9 @@ import static com.locationinfo.constants.AppConstants.*;
  */
 @Service
 public class FourSquareServiceProvider implements LocationServiceProvider {
-    private CloseableHttpClient httpClient;
 
-    public FourSquareServiceProvider() {
-        httpClient = HttpClients.createDefault();
-    }
-
+    @Autowired
+    RestTemplate restTemplate;
 
     /**
      * @param requestBean contains location and optional categoryType
@@ -41,14 +39,14 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            String baseUrl = FOUR_SQUARE_BASE_URL + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "&near=" + requestBean.getLocation();
 
-            HttpGet httpGet = new HttpGet(baseUrl);
-            httpGet.setHeader("Content-type", "application/json");
-            CloseableHttpResponse responseData = httpClient.execute(httpGet);
-            if (responseData.getStatusLine().getStatusCode() == 200) {
-                getFourSquareResponse(responseData, locationSet, mapper);
-            }
+            String baseUrl = FOUR_SQUARE_BASE_URL + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + "&near=" + requestBean.getLocation();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            String result = restTemplate.postForObject(baseUrl, entity, String.class);
+            getFourSquareResponse(result, locationSet, mapper);
+
         } catch (Exception e) {
             throw new LocationDetailsException(e.getMessage(),"401");
         }
@@ -60,13 +58,13 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
      * @return Set<LocationDTO> of locations from google geocode and foursquare
      * @implNote data parsing of response object return from foursquare rest service
      */
-    public void getFourSquareResponse(CloseableHttpResponse response, Set<LocationDTO> locationDTOSet, ObjectMapper mapper) {
+    public void getFourSquareResponse(String response, Set<LocationDTO> locationDTOSet, ObjectMapper mapper) {
 
             Map<String, Object> map;
             LinkedHashMap<String, Object> places;
 
         try {
-            map = mapper.readValue(response.getEntity().getContent(), Map.class);
+            map = mapper.readValue(response, Map.class);
             places = (LinkedHashMap<String, Object>) map.get("response");
 
             ArrayList<LinkedHashMap<String, Object>> venues = (ArrayList<LinkedHashMap<String, Object>>) places.get("venues");
@@ -100,4 +98,5 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
             throw new LocationDetailsException(e.getMessage(),"401");
         }
     }
+
 }

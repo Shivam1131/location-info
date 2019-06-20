@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +45,7 @@ public class LocationInfoServiceImpl implements LocationInfoService {
         try {
 
             Set<LocationDTO> locationSet;
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = new ConcurrentHashMap<>();
 
             locationSet=fourSquareServiceProvider.getLocationInfo(requestBean);
             locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));

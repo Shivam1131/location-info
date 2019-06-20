@@ -3,7 +3,7 @@ package com.locationinfo.constants;
 /**
  * @author Sadashiv Kadam
  */
-public class AppConstants {
+public final class AppConstants {
 
     private AppConstants() {
         super();

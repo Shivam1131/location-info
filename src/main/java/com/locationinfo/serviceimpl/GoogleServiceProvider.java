@@ -6,13 +6,16 @@ import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
 import com.locationinfo.exception.LocationDetailsException;
 import com.locationinfo.service.LocationServiceProvider;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -24,6 +27,9 @@ import static com.locationinfo.constants.AppConstants.GOOGLE_BASE_URL;
 @Service
 @PropertySource("classpath:application.properties")
 public class GoogleServiceProvider implements LocationServiceProvider {
+
+    @Autowired
+    RestTemplate restTemplate;
 
     /**
      * @implNote get set of LocationDTO from geocode api
@@ -43,13 +49,12 @@ public class GoogleServiceProvider implements LocationServiceProvider {
 
         try {
             String baseUrl = GOOGLE_BASE_URL + "?key=" + GOOGLE_API_KEY + "&address=" +requestBean.getLocation()/*+ URLEncoder.encode(query, "UTF-8")*/;
-            HttpGet httpGet = new HttpGet(baseUrl);
-            httpGet.setHeader("Accept", "application/json");
-            httpGet.setHeader("Content-type", "application/json");
 
-            CloseableHttpResponse responseData =httpClient.execute(httpGet);
-
-            map = mapper.readValue(responseData.getEntity().getContent(), Map.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            String result = restTemplate.postForObject(baseUrl, entity, String.class);
+            map = mapper.readValue(result, Map.class);
 
             List<Map<String, Object>> places = (List<Map<String, Object>>)map.get("results");
 
