@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locationinfo.constants.AppConstants;
 import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
-import com.locationinfo.exception.LocationDetailsException;
 import com.locationinfo.service.LocationServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
@@ -29,6 +30,8 @@ public class GoogleServiceProvider implements LocationServiceProvider {
 
     @Autowired
     RestTemplate restTemplate;
+
+    Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     /**
      * @param requestBean contains location and optional categoryType
@@ -87,7 +90,8 @@ public class GoogleServiceProvider implements LocationServiceProvider {
             }
 
         } catch (Exception e) {
-            throw new LocationDetailsException(e.toString());
+            logger.info("Exception raised by Google service provider");
+
         }
 
         return locationSet;

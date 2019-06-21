@@ -46,7 +46,7 @@ public class LocationInfoServiceImpl implements LocationInfoService {
             Map<String, Object> data = new ConcurrentHashMap<>();
 
             locationSet = fourSquareServiceProvider.getLocationInfo(requestBean);
-            locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));
+            // locationSet.addAll(googleServiceProvider.getLocationInfo(requestBean));
 
             if (locationSet.isEmpty())
                 responseBean.setMessage(AppConstants.NO_DATA_FOUND);

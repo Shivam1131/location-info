@@ -34,10 +34,11 @@ public class LocationInfoController {
      * @apiNote API to get list of location details from fourSquare and google Geocode
      * & combines the result
      */
-    @PostMapping("/getLocationInfo")
+    @PostMapping(value = "/getLocationInfo", produces = "application/json", consumes = "application/json")
+
     public ResponseEntity<ServiceResponseBean> getLocationInfo(@RequestBody RequestBean requestBean) {
 
-        logger.info("getLocationInfo() called with param :{} ", requestBean.getLocation());
+        logger.info("getLocationInfo() called with param :{} ", requestBean);
 
         ResponseEntity<ServiceResponseBean> response;
         ServiceResponseBean responseBean = new ServiceResponseBean();

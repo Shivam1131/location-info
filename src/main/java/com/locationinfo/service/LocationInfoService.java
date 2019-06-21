@@ -2,7 +2,6 @@ package com.locationinfo.service;
 
 import com.locationinfo.dto.RequestBean;
 import com.locationinfo.dto.ServiceResponseBean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**

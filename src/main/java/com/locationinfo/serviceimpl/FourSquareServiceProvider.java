@@ -3,8 +3,9 @@ package com.locationinfo.serviceimpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locationinfo.dto.LocationDTO;
 import com.locationinfo.dto.RequestBean;
-import com.locationinfo.exception.LocationDetailsException;
 import com.locationinfo.service.LocationServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +26,7 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
 
     @Autowired
     RestTemplate restTemplate;
+    Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     /**
      * @param requestBean contains location and optional categoryType
@@ -44,7 +46,7 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
             String result = restTemplate.postForObject(baseUrl, new HttpEntity<>(headers), String.class);
             getFourSquareResponse(result, locationSet, mapper);
         } catch (Exception e) {
-            throw new LocationDetailsException(e.toString(), "401");
+            logger.info("No results from fourSquare");
         }
         return locationSet;
     }
@@ -88,7 +90,7 @@ public class FourSquareServiceProvider implements LocationServiceProvider {
             }
 
         } catch (Exception e) {
-            throw new LocationDetailsException(e.toString(), "401");
+            logger.info("Exception at FourSquareServiceProvider : {}", e);
         }
     }
 
