@@ -13,6 +13,10 @@ import org.springframework.web.client.RestTemplate;
 @EnableAutoConfiguration
 public class LocationInfoApplication {
 
+    public LocationInfoApplication() {
+        super();
+    }
+
     /**
      * Main method
      */

@@ -35,7 +35,6 @@ public class LocationInfoController {
      * & combines the result
      */
     @PostMapping(value = "/getLocationInfo", produces = "application/json", consumes = "application/json")
-
     public ResponseEntity<ServiceResponseBean> getLocationInfo(@RequestBody RequestBean requestBean) {
 
         logger.info("getLocationInfo() called with param :{} ", requestBean);

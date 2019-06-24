@@ -3,13 +3,11 @@ package com.locationinfo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locationinfo.dto.RequestBean;
-import com.locationinfo.service.LocationInfoService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,25 +22,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
+@SpringBootTest
 public class LocationInfoControllerTest {
 
     @Autowired
     private LocationInfoController locationInfoController;
-
-    @Mock
-    private LocationInfoService locationInfoService;
-
     private MockMvc mockMvc;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(locationInfoController).build();
-
     }
 
     @Test
@@ -85,7 +76,6 @@ public class LocationInfoControllerTest {
                 .andExpect(status().isOk()).andReturn();
         assertEquals(200, result.getResponse().getStatus(), "Match status OK");
         Assert.assertTrue(result.getResponse().getContentAsString().contains("No data found for the given category."));
-
     }
 
     @Test
@@ -99,10 +89,6 @@ public class LocationInfoControllerTest {
                 .content(jsonStr))
                 .andExpect(status().isBadRequest()).andReturn();
         assertEquals(400, result.getResponse().getStatus(), "Match status OK");
-
         Assert.assertTrue(result.getResponse().getContentAsString().contains("Location name is missing in request"));
-
     }
-
-
 }
